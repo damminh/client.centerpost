@@ -1,8 +1,6 @@
-export class Member {
+export class User {
     id: number;
-    user_id: number;
     name: string;
-    phone: string;
     username: string;
     password: string;
     token: string;
