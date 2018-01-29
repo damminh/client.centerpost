@@ -1,0 +1,143 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="form-group col-xs-6">
+            <label>Từ ngày: </label>
+            <input name="fromDate" type="text" class="form-control" placeholder="Từ ngày" bsDatepicker
+                   [(bsValue)]="fromDate" [value]="pipe.transform(fromDate,'DD-MM-YYYY')">
+          </div>
+          <div class="form-group col-xs-6">
+            <label>Đến ngày: </label>
+            <input name="toDate" type="text" class="form-control" placeholder="Đến ngày" bsDatepicker
+                   [(bsValue)]="toDate" [value]="pipe.transform(toDate,'DD-MM-YYYY')">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-xs-6">
+            <label>Tên cộng tác viên: </label>
+            <select class="form-control" [(ngModel)]="memberFilter">
+              <option value="0">Tất cả</option>
+              <option *ngFor="let item of members" value="{{item.id}}">{{item.name}}</option>
+            </select>
+          </div>
+          <div class="form-group col-xs-6">
+            <label>Đã thêm vào tài khoản facebook: </label>
+            <select class="form-control" [(ngModel)]="isAccountFilter">
+              <option value="0">Chưa thêm</option>
+              <option value="1">Đã thêm</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" *ngIf="isAccountFilter==0">
+          <div class="form-group col-xs-6">
+            <label>Trạng thái duyệt: </label>
+            <select class="form-control" [(ngModel)]="approvedFilter">
+              <option value="2">Chưa duyệt</option>
+              <option value="1">Đã duyệt</option>
+              <option value="0">Từ chối</option>
+            </select>
+          </div>
+          <div class="form-group col-xs-6">
+            <label>Trạng thái công việc CTV đã làm: </label>
+            <select class="form-control" [(ngModel)]="isSaveFilter">
+              <option value="1">Lưu lại</option>
+              <option value="0">Bỏ qua</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="form-group col-xs-6">
+            <button (click)="submit()" type="button" class="btn btn-default">Thống kê</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <button
+              *ngIf="statusSavedButton"
+              style="margin-right:5px;"
+              type="button" class="btn btn-primary pull-right" mwlConfirmationPopover
+              title="Lưu lại"
+              message="Lưu các tài khoản được chọn vào CSDL?"
+              placement="top" confirmText="Yes<i class='fa fa-check'></i>" cancelText="No<i class='fa fa-remove'></i>"
+              (confirm)="saveAccount()">
+              <i class="fa fa fa-floppy-o" aria-hidden="true"></i>
+              <span>Thêm CSDL</span>
+            </button>
+            <button *ngIf="statusRejectedButton"
+                    style="margin-right:3px;" class="btn btn-danger pull-right" mwlConfirmationPopover
+                    title="Duyệt"
+                    message="Từ chối các tài khoản được chọn?" placement="top"
+                    confirmText="Yes<i class='fa fa-check'></i>"
+                    cancelText="No<i class='fa fa-remove'></i>"
+                    (confirm)="rejected()">
+              <i class="fa fa-thumbs-o-down"></i>
+              <span>Từ chối</span>
+            </button>
+            <button *ngIf="statusApprovedButton"
+                    style="margin-right:3px;" class="btn btn-success pull-right" mwlConfirmationPopover
+                    title="Duyệt"
+                    message="Duyệt các tài khoản được chọn?" placement="top"
+                    confirmText="Yes<i class='fa fa-check'></i>"
+                    cancelText="No<i class='fa fa-remove'></i>"
+                    (confirm)="approved()">
+              <i class="fa fa-thumbs-o-up"></i>
+              <span>Duyệt</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>
+        <input title="Chọn tất cả" (change)="checkAll()" [(ngModel)]="isCheckAll" type="checkbox"
+               class="form-check-input">
+      </th>
+      <th>STT</th>
+      <th>Ngày</th>
+      <th>Link facebook</th>
+      <th>Trạng thái</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd" *ngFor="let item of list;let i = index">
+      <td>
+        <input (change)="checkItem(item)" [(ngModel)]="item.checked" type="checkbox" class="form-check-input">
+      </td>
+      <td>{{i+1}}.</td>
+      <td>{{item.time}}</td>
+      <td>
+          <span *ngIf="item.recommend">
+            <a href="{{item.recommend.url}}" target="_blank">{{item.recommend.url}}</a>
+          </span>
+      </td>
+      <td>
+        <span class="label label-danger" *ngIf="item.is_save == 0">Bỏ qua</span>
+        <span class="label label-success" *ngIf="item.is_save == 1">Lưu lại</span>
+        <span class="label label-danger" *ngIf="item.approved == 0">Từ chối</span>
+        <span class="label label-success" *ngIf="item.approved == 1">Đã duyệt</span>
+      </td>
+      <td>
+        <button class="btn btn-info" (click)="detail(item)" title="Xem các bài viết">
+          <i class="fa fa-eye"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="text-center">
+        <button *ngIf="hasMore" class="btn btn-default" (click)="seeMore()">
+          Xem thêm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-xs-6">
+        <form class="form-horizontal search-form" (ngSubmit)="search()" id="searchForm">
+          <div class="input-group col-xs-8" style="float: left">
+            <input type="text" class="form-control" [(ngModel)]="searchText" id="search" name="search"
+                   placeholder="Gợi ý theo tên, mô tả">
+            <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" (click)="clear()"><i class="fa fa-remove"></i></button>
+                </span>
+          </div>
+          <div class="col-xs-4">
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+          </div>
+        </form>
+      </div>
+      <div class="col-xs-6">
+        <button type="button" class="pull-right btn btn-primary" (click)="create()">Thêm mới</button>
+      </div>
+    </div>
+  </div>
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>STT</th>
+      <th>Tên</th>
+      <th>Số điện thoại</th>
+      <th>Tài khoản</th>
+      <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd" *ngFor="let item of list;let i = index">
+      <td>{{((pagination.currentPage-1)*pagination.itemsPerPage)+i+1}}.</td>
+      <td><a href="javascript:void(0)" (click)="edit(item,i)">{{item.name}}</a></td>
+      <td>{{item.phone}}</td>
+      <td>{{item.username}}</td>
+      <td>
+        <button type="button" class="btn btn-danger"
+                mwlConfirmationPopover
+                title="Xóa"
+                message="Bạn thực sự muốn xóa?"
+                placement="top"
+                confirmText="Yes<i class='fa fa-check'></i>"
+                cancelText="No<i class='fa fa-remove'></i>"
+                (confirm)="remove(item,i)">
+          <i class="fa fa-trash-o"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6">
+        <pagination [totalItems]="pagination.totalItems" [(ngModel)]="pagination.currentPage"
+                    [maxSize]="pagination.maxSize"
+                    [itemsPerPage]="pagination.itemsPerPage" (pageChanged)="pageChanged($event)"
+                    [boundaryLinks]="true" class="pagination-sm"
+                    (numPages)="pagination.numPages = $event"></pagination>
+      </div>
+      <div class="col-xs-6">
+        <div class="box-go-to">
+          <input type="number" class="col-xs-2" [(ngModel)]="nextPage">
+          <span class="col-xs-1">/</span>
+          <input type="text" class="col-xs-2" [(ngModel)]="pagination.numPages" disabled>
+          <div class="col-xs-4">
+            <button (click)="goToPage()">Đến</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

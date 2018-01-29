@@ -1,0 +1,92 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-12 form-inline">
+            <div class="form-group">
+              <label>Từ ngày: </label>
+              <input name="fromDate" type="text" class="form-control" placeholder="Từ ngày" bsDatepicker
+                     [(bsValue)]="value_from" [value]="pipe.transform(value_from,'DD-MM-YYYY')">
+            </div>
+            <div class="form-group">
+              <label>Đến ngày: </label>
+              <input name="toDate" type="text" class="form-control" placeholder="Đến ngày" bsDatepicker
+                     [(bsValue)]="value_to" [value]="pipe.transform(value_to,'DD-MM-YYYY')">
+            </div>
+            <button (click)="submit()" type="button" class="btn btn-default">Xem báo cáo</button>
+            <button (click)="exportExcel()" [disabled]="list.length==0" type="button"
+                    class="btn btn-primary pull-right">Xuất file
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-bordered table-hover">
+    <thead class="text-center">
+    <tr>
+      <th rowspan="3">STT</th>
+      <th rowspan="3">Tên CTV</th>
+      <th colspan="4">
+        Lưu lại
+      </th>
+      <th colspan="4">
+        Bỏ qua
+      </th>
+      <th rowspan="3">Tổng số</th>
+    </tr>
+    <tr>
+      <th colspan="2">Chính xác</th>
+      <th colspan="2">Không chính xác</th>
+      <th colspan="2">Chính xác</th>
+      <th colspan="2">Không chính xác</th>
+    </tr>
+    <tr>
+      <th>Chỉ số</th>
+      <th>%</th>
+      <th>Chỉ số</th>
+      <th>%</th>
+      <th>Chỉ số</th>
+      <th>%</th>
+      <th>Chỉ số</th>
+      <th>%</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd gradeX" *ngFor="let item of list; let i = index">
+      <td class="text-right">{{i+1}}</td>
+      <td class="text-right">
+        <span>{{item.name}}</span>
+      </td>
+      <td class="text-right">{{item.status11}}</td>
+      <td class="text-right">
+        <span *ngIf="item.total > 0">{{100.0 * item.status11 / item.total | number:'1.2-2'}}</span>
+        <span *ngIf="item.total == 0">0.00</span>
+      </td>
+      <td class="text-right">{{item.status10}}</td>
+      <td class="text-right">
+          <span *ngIf="item.total > 0">
+              {{100.0 * item.status10 / item.total| number:'1.2-2'}}
+          </span>
+        <span *ngIf="item.total == 0">0.00</span>
+      </td>
+      <td class="text-right">{{item.status01}}</td>
+      <td class="text-right">
+          <span *ngIf="item.total > 0">
+              {{100.0 * item.status01 / item.total| number:'1.2-2'}}
+          </span>
+        <span *ngIf="item.total == 0">0.00</span>
+      </td>
+      <td class="text-right">{{item.status00}}</td>
+      <td class="text-right">
+        <span *ngIf="item.total > 0">{{ 100.0 * item.status00 / item.total | number:'1.2-2'}}</span>
+        <span *ngIf="item.total == 0">0.00</span>
+      </td>
+      <td class="text-right">{{item.total}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="panel-footer">
+  </div>
+</div>

@@ -1,0 +1,16 @@
+/* You can add global styles to this file, and also import other style files */
+.alert-text {
+  color: red;
+}
+
+.box-go-to {
+  margin: 20px 0;
+}
+
+.modal .modal-huge {
+  width: 95%;
+}
+
+ul.list-report li {
+  padding: 5px;
+}
